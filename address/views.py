@@ -15,4 +15,6 @@ class CityList(generics.ListAPIView):
     def get_queryset(self):
         queryset = self.queryset
         name = self.request.query_params.get('name')
-        return queryset.filter(name__contains=name).all()
+        if name:
+            return queryset.filter(name__contains=name).all()
+        return queryset.all()
