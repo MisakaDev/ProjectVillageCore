@@ -22,5 +22,7 @@ urlpatterns = [
     # Auth
     path('api/v1/auth/', include('auth.urls')),
     # Profiles
-    path('api/v1/profiles/', include('profiles.urls'))
+    path('api/v1/profiles/', include('profiles.urls')),
+    # Address
+    path('api/v1/address/', include('address.urls')),
 ]
