@@ -4,7 +4,7 @@ from django.db import models
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    post = models.CharField("Посада", max_length=255)
+    post = models.CharField("Посада", max_length=64)
 
     class Meta:
-        ordering = ('user__id',)
+        ordering = ('id',)

@@ -4,11 +4,11 @@ from profiles.models import Profile
 from profiles.serializers import ProfileSerializer
 
 
-class ProfileView:
-    class List(generics.ListAPIView):
-        queryset = Profile.objects.all()
-        serializer_class = ProfileSerializer
+class ProfileList(generics.ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
 
-    class Detail(generics.RetrieveUpdateAPIView):
-        queryset = Profile.objects.all()
-        serializer_class = ProfileSerializer
+
+class ProfileDetail(generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
