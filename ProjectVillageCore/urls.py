@@ -25,4 +25,6 @@ urlpatterns = [
     path('api/v1/profiles/', include('profiles.urls')),
     # Address
     path('api/v1/address/', include('address.urls')),
+    # Persons
+    path('api/v1/persons/', include('persons.urls')),
 ]
