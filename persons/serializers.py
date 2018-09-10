@@ -3,24 +3,17 @@ from rest_framework import serializers
 from address.models import City
 from address.serializers import CitySerializer
 from profiles.serializers import ProfileSerializer
-from .models import IndividualPerson
+from .models import Person, IndividualPerson, LegalPerson
 
 
-class IndividualPersonSerializer(serializers.ModelSerializer):
-    additional_info = serializers.CharField(required=False, default='')
+class PersonSerializer(serializers.ModelSerializer):
     created_by = ProfileSerializer(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
     edited_by = ProfileSerializer(read_only=True)
     edited_at = serializers.DateTimeField(read_only=True)
-
     city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all(), write_only=True)
     city_name = CitySerializer(source='city', read_only=True)
-
-    class Meta:
-        model = IndividualPerson
-        fields = (
-            'id', 'last_name', 'first_name', 'middle_name', 'inn', 'city', 'city_name', 'address', 'additional_info',
-            'created_by', 'created_at', 'edited_by', 'edited_at')
+    additional_info = serializers.CharField(required=False, default='')
 
     def create(self, validated_data):
         current_user = self.context['request'].user.profile
@@ -32,3 +25,20 @@ class IndividualPersonSerializer(serializers.ModelSerializer):
         current_user = self.context['request'].user.profile
         validated_data['edited_by'] = current_user
         return super().update(instance, validated_data)
+
+    class Meta:
+        model = Person
+        fields = ('id', 'city', 'city_name', 'address', 'additional_info', 'created_by', 'created_at',
+                  'edited_by', 'edited_at')
+
+
+class IndividualPersonSerializer(PersonSerializer):
+    class Meta(PersonSerializer.Meta):
+        model = IndividualPerson
+        fields = ('last_name', 'first_name', 'middle_name', 'inn') + PersonSerializer.Meta.fields
+
+
+class LegalPersonSerializer(PersonSerializer):
+    class Meta(PersonSerializer.Meta):
+        model = LegalPerson
+        fields = ('name', 'edrpou') + PersonSerializer.Meta.fields

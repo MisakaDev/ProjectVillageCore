@@ -1,8 +1,8 @@
 from rest_framework import generics
 
-from .filters import IndividualPersonFilter
-from .models import IndividualPerson
-from .serializers import IndividualPersonSerializer
+from .filters import IndividualPersonFilter, LegalPersonFilter
+from .models import IndividualPerson, LegalPerson
+from .serializers import IndividualPersonSerializer, LegalPersonSerializer
 
 
 class IndividualPersonList(generics.ListCreateAPIView):
@@ -14,3 +14,14 @@ class IndividualPersonList(generics.ListCreateAPIView):
 class IndividualPersonDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = IndividualPerson.objects.all()
     serializer_class = IndividualPersonSerializer
+
+
+class LegalPersonList(generics.ListCreateAPIView):
+    queryset = LegalPerson.objects.all()
+    serializer_class = LegalPersonSerializer
+    filterset_class = LegalPersonFilter
+
+
+class LegalPersonDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = LegalPerson.objects.all()
+    serializer_class = LegalPersonSerializer
