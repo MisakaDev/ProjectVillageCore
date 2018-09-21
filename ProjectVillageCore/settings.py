@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'profiles',
     'address',
     'persons',
+    'lands',
 ]
 
 MIDDLEWARE = [

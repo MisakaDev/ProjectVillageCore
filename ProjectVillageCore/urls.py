@@ -27,4 +27,6 @@ urlpatterns = [
     path('api/v1/address/', include('address.urls')),
     # Persons
     path('api/v1/persons/', include('persons.urls')),
+    # Persons
+    path('api/v1/lands/', include('lands.urls')),
 ]
