@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from profiles.serializers import ProfileSerializer
-from .models import LandPurpose, LandZone, LandUnit, LandPlot, LandQuarter
+from .models import LandPurpose, LandZone, LandUnit, LandPlot, LandQuarter, LandOwn, LandRent
 
 
 class LandPurposeSerializer(serializers.ModelSerializer):
@@ -68,3 +68,21 @@ class LandPlotSerializer(serializers.ModelSerializer):
                                                        zone=self.validated_data.pop('zone'))
         self.validated_data['quarter'] = quarter
         return super().save(**kwargs)
+
+
+class LandOwnSerializer(serializers.ModelSerializer):
+    land_plot_info = LandPlotSerializer(source='land_plot', read_only=True)
+    land_plot = serializers.PrimaryKeyRelatedField(write_only=True, queryset=LandPlot.objects.all())
+
+    class Meta:
+        model = LandOwn
+        fields = ('person', 'land_plot', 'land_plot_info')
+
+
+class LandRentSerializer(serializers.ModelSerializer):
+    land_plot_info = LandPlotSerializer(source='land_plot', read_only=True)
+    land_plot = serializers.PrimaryKeyRelatedField(write_only=True, queryset=LandPlot.objects.all())
+
+    class Meta:
+        model = LandRent
+        fields = ('person', 'land_plot', 'land_plot_info')

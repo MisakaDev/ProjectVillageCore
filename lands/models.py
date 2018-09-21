@@ -1,5 +1,6 @@
 from django.db import models
 
+from persons.models import Person
 from profiles.models import Profile
 
 
@@ -63,3 +64,19 @@ class LandPlot(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_by = models.ForeignKey(Profile, models.PROTECT, related_name='lands_edited')
     edited_at = models.DateTimeField(auto_now=True)
+
+
+class LandOwn(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    land_plot = models.ForeignKey(LandPlot, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('person', 'land_plot'),)
+
+
+class LandRent(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    land_plot = models.ForeignKey(LandPlot, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('person', 'land_plot'),)

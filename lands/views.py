@@ -1,8 +1,9 @@
 from rest_framework import generics, filters
 
-from .filters import LandPlotFilter
-from .models import LandPurpose, LandUnit, LandPlot
-from .serializers import LandPurposeSerializer, LandUnitSerializer, LandPlotSerializer
+from .filters import LandPlotFilter, LandOwnFilter, LandRentFilter
+from .models import LandPurpose, LandUnit, LandPlot, LandOwn, LandRent
+from .serializers import LandPurposeSerializer, LandUnitSerializer, LandPlotSerializer, LandOwnSerializer
+from .serializers import LandRentSerializer
 
 
 class LandPurposeList(generics.ListAPIView):
@@ -26,3 +27,15 @@ class LandPlotList(generics.ListCreateAPIView):
 class LandPlotDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = LandPlot.objects.all()
     serializer_class = LandPlotSerializer
+
+
+class LandOwnList(generics.ListCreateAPIView):
+    queryset = LandOwn.objects.all()
+    serializer_class = LandOwnSerializer
+    filterset_class = LandOwnFilter
+
+
+class LandRentList(generics.ListCreateAPIView):
+    queryset = LandRent.objects.all()
+    serializer_class = LandRentSerializer
+    filterset_class = LandRentFilter
