@@ -62,13 +62,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ProjectVillageCore.urls'
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    # TODO - set this properly for production
-    'http://127.0.0.1:8080',
-    'http://127.0.0.1:8000',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = (
+#     # TODO - set this properly for production
+#     'http://127.0.0.1:8080',
+#     'http://127.0.0.1:8000',
+#     'http://localhost:8080',
+#     'http://localhost:8000',
+# )
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
