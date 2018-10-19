@@ -11,7 +11,7 @@ class Person(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_by = models.ForeignKey(Profile, models.PROTECT, related_name='person_edited')
     edited_at = models.DateTimeField(auto_now=True)
-    additional_info = models.TextField(blank=True)
+    additional_info = models.TextField()
 
 
 class IndividualPerson(Person):

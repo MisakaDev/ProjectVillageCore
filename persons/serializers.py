@@ -13,7 +13,7 @@ class PersonSerializer(serializers.ModelSerializer):
     edited_at = serializers.DateTimeField(read_only=True)
     city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all(), write_only=True)
     city_name = CitySerializer(source='city', read_only=True)
-    additional_info = serializers.CharField(required=False, default='')
+    additional_info = serializers.CharField(required=False, default='', allow_blank=True)
 
     def create(self, validated_data):
         current_user = self.context['request'].user.profile
