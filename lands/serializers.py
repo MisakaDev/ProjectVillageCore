@@ -46,6 +46,7 @@ class LandPlotSerializer(serializers.ModelSerializer):
     edited_by = ProfileSerializer(read_only=True)
     edited_at = serializers.DateTimeField(read_only=True)
     additional_info = serializers.CharField(allow_blank=True)
+    purpose = LandPurposeSerializer()
 
     class Meta:
         model = LandPlot
