@@ -46,12 +46,12 @@ class LandPlotSerializer(serializers.ModelSerializer):
     edited_by = ProfileSerializer(read_only=True)
     edited_at = serializers.DateTimeField(read_only=True)
     additional_info = serializers.CharField(allow_blank=True)
-    purpose = LandPurposeSerializer()
+    purpose_info = LandPurposeSerializer(source='purpose', read_only=True)
 
     class Meta:
         model = LandPlot
         fields = ('id', 'zone', 'quarter', 'quarter_info', 'code', 'area', 'purpose', 'address', 'additional_info',
-                  'created_by', 'created_at', 'edited_by', 'edited_at')
+                  'created_by', 'created_at', 'edited_by', 'edited_at', 'purpose_info')
 
     def create(self, validated_data):
         current_user = self.context['request'].user.profile
