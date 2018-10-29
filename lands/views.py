@@ -1,8 +1,9 @@
 from rest_framework import generics, filters
 
 from .filters import LandPlotFilter, LandOwnFilter, LandRentFilter
-from .models import LandPurpose, LandUnit, LandPlot, LandOwn, LandRent
-from .serializers import LandPurposeSerializer, LandUnitSerializer, LandPlotSerializer, LandOwnSerializer
+from .models import LandPurpose, LandUnit, LandPlot, LandOwn, LandRent, LandZone
+from .serializers import LandPurposeSerializer, LandUnitSerializer, LandPlotSerializer, LandOwnSerializer, \
+    LandZoneSerializer
 from .serializers import LandRentSerializer
 
 
@@ -16,6 +17,11 @@ class LandPurposeList(generics.ListAPIView):
 class LandUnitList(generics.ListAPIView):
     queryset = LandUnit.objects.all()
     serializer_class = LandUnitSerializer
+
+
+class LandZoneList(generics.ListAPIView):
+    queryset = LandZone.objects.all()
+    serializer_class = LandZoneSerializer
 
 
 class LandPlotList(generics.ListCreateAPIView):

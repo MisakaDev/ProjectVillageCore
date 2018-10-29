@@ -11,9 +11,12 @@ class LandPurposeSerializer(serializers.ModelSerializer):
 
 
 class LandZoneSerializer(serializers.ModelSerializer):
+    unit_name = serializers.CharField(source='unit.name')
+    unit_code = serializers.CharField(source='unit.code')
+
     class Meta:
         model = LandZone
-        fields = ('id', 'code', 'name')
+        fields = ('id', 'code', 'name', 'unit_name', 'unit_code')
 
 
 class LandUnitSerializer(serializers.ModelSerializer):
