@@ -43,7 +43,7 @@ class LandQuarterSerializer(serializers.ModelSerializer):
 class LandPlotSerializer(serializers.ModelSerializer):
     quarter_info = LandQuarterSerializer(source='quarter', read_only=True)
     zone = serializers.PrimaryKeyRelatedField(write_only=True, queryset=LandZone.objects.all())
-    quarter = serializers.IntegerField(write_only=True, allow_null=True)
+    quarter = serializers.IntegerField(write_only=True, allow_null=True, required=False)
     created_by = ProfileSerializer(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
     edited_by = ProfileSerializer(read_only=True)
