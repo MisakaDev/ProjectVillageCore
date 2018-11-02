@@ -15,14 +15,16 @@ class LandPlotFilter(FilterSet):
 
 class LandOwnFilter(FilterSet):
     person = ModelChoiceFilter(queryset=Person.objects.all())
+    land_plot = ModelChoiceFilter(queryset=LandPlot.objects.all())
 
     class Meta:
         model = LandOwn
-        fields = ('person',)
+        fields = ('person', 'land_plot')
 
 
 class LandRentFilter(FilterSet):
     person = ModelChoiceFilter(queryset=Person.objects.all())
+    land_plot = ModelChoiceFilter(queryset=LandPlot.objects.all())
 
     class Meta:
         model = LandRent
