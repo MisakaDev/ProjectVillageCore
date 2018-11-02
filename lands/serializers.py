@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from persons.models import Person, IndividualPerson, LegalPerson
 from profiles.serializers import ProfileSerializer
 from .models import LandPurpose, LandZone, LandUnit, LandPlot, LandQuarter, LandOwn, LandRent
 
@@ -74,19 +75,50 @@ class LandPlotSerializer(serializers.ModelSerializer):
         return super().save(**kwargs)
 
 
+class PersonSerializer(serializers.ModelSerializer):
+    person_type = serializers.SerializerMethodField()
+    person_name = serializers.SerializerMethodField()
+    person_code = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Person
+        fields = ['id', 'person_type', 'person_name', 'person_code', 'additional_info']
+
+    def get_person_type(self, obj):
+        if IndividualPerson.objects.filter(id=obj.id).count():
+            return 'IndividualPerson'
+        return 'LegalPerson'
+
+    def get_person_name(self, obj):
+        ip = IndividualPerson.objects.filter(id=obj.id).first()
+        if ip:
+            return "{} {} {}".format(ip.first_name, ip.last_name, ip.middle_name)
+        return LegalPerson.objects.filter(id=obj.id).first().name
+
+    def get_person_code(self, obj):
+        ip = IndividualPerson.objects.filter(id=obj.id).first()
+        if ip:
+            return ip.inn
+        return LegalPerson.objects.filter(id=obj.id).first().edrpou
+
+
 class LandOwnSerializer(serializers.ModelSerializer):
     land_plot_info = LandPlotSerializer(source='land_plot', read_only=True)
     land_plot = serializers.PrimaryKeyRelatedField(write_only=True, queryset=LandPlot.objects.all())
+    person = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Person.objects.all())
+    person_info = PersonSerializer(source='person', read_only=True)
 
     class Meta:
         model = LandOwn
-        fields = ('person', 'land_plot', 'land_plot_info')
+        fields = ('person', 'land_plot', 'land_plot_info', 'person_info')
 
 
 class LandRentSerializer(serializers.ModelSerializer):
     land_plot_info = LandPlotSerializer(source='land_plot', read_only=True)
     land_plot = serializers.PrimaryKeyRelatedField(write_only=True, queryset=LandPlot.objects.all())
+    person = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Person.objects.all())
+    person_info = PersonSerializer(source='person', read_only=True)
 
     class Meta:
         model = LandRent
-        fields = ('person', 'land_plot', 'land_plot_info')
+        fields = ('person', 'land_plot', 'land_plot_info', 'person_info')
