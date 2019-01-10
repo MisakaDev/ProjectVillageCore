@@ -6,6 +6,7 @@ from profiles.models import Profile
 
 class Person(models.Model):
     city = models.ForeignKey(City, models.PROTECT)
+    additional_city = models.ForeignKey(City, models.PROTECT, related_name='additional_cities', null=True, blank=True, default=None)
     address = models.CharField(max_length=255)
     created_by = models.ForeignKey(Profile, models.PROTECT, related_name='person_created')
     created_at = models.DateTimeField(auto_now_add=True)

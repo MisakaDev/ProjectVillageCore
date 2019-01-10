@@ -14,6 +14,8 @@ class PersonSerializer(serializers.ModelSerializer):
     city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all(), write_only=True)
     city_name = CitySerializer(source='city', read_only=True)
     additional_info = serializers.CharField(required=False, default='', allow_blank=True)
+    additional_city = serializers.PrimaryKeyRelatedField(queryset=City.objects.all(), write_only=True, default=None, required=False, allow_null=True)
+    additional_city_name = CitySerializer(source='additional_city', read_only=True)
 
     def create(self, validated_data):
         current_user = self.context['request'].user.profile
@@ -29,7 +31,7 @@ class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'city', 'city_name', 'address', 'additional_info', 'created_by', 'created_at',
-                  'edited_by', 'edited_at')
+                  'edited_by', 'edited_at', 'additional_city', 'additional_city_name')
 
 
 class IndividualPersonSerializer(PersonSerializer):

@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     # Admin
@@ -29,4 +31,6 @@ urlpatterns = [
     path('api/v1/persons/', include('persons.urls')),
     # Persons
     path('api/v1/lands/', include('lands.urls')),
+    # Main
+    path('', csrf_exempt(TemplateView.as_view(template_name='index.html')))
 ]
