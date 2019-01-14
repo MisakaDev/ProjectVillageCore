@@ -7,6 +7,11 @@ from .serializers import LandPurposeSerializer, LandUnitSerializer, LandPlotSeri
     LandZoneSerializer
 from .serializers import LandRentSerializer
 
+from django.views.generic import ListView
+from django.db import connection
+import csv
+from django.shortcuts import HttpResponse
+
 
 class LandPurposeList(generics.ListAPIView):
     queryset = LandPurpose.objects.all()
@@ -76,3 +81,84 @@ class LandStatistic(views.APIView):
                 result[0][1].append(value if value else 0)
             return response.Response(result)
         return response.Response({})
+
+
+class LandExport(ListView):
+    model = LandPlot
+
+    def render_to_response(self, context, **response_kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="all_export.csv"'
+
+        writer = csv.writer(response)
+
+        # Всі земельні ділянки для який визначено одного власника
+        # query = self.get_queryset().annotate(num_owners=Count('owners__person')).filter(num_owners__gt=1)
+        with connection.cursor() as cursor:
+            cursor.execute("""select 
+
+persons_individualperson.last_name,
+persons_individualperson.first_name,
+persons_individualperson.middle_name,
+persons_individualperson.inn,
+persons_person.address,
+address_city.name,
+address_district.name,
+address_region.name,
+persons_person.additional_info,
+
+lands_landunit.code || ':' ||
+LPAD(to_char(lands_landzone.code, 'FM00'), 2, '0')  || ':' ||
+COALESCE(LPAD(to_char(lands_landquarter.code, 'FM000'), 3, '0'), '000') || ':' ||
+COALESCE(LPAD(to_char(lands_landplot.code, 'FM0000'), 4, '0'), '0000'),
+
+
+replace(lands_landplot.area::text, '.', ','),
+
+lands_landpurpose.code,
+lands_landpurpose.name,
+
+lands_landplot.address,
+lands_landzone.name,
+lands_landunit.name,
+lands_landplot.additional_info
+
+from lands_landplot 
+join lands_landown on lands_landplot.id=lands_landown.land_plot_id
+
+join lands_landpurpose on lands_landplot.purpose_id=lands_landpurpose.id
+
+join lands_landquarter on lands_landplot.quarter_id=lands_landquarter.id
+join lands_landzone on lands_landquarter.zone_id=lands_landzone.id
+join lands_landunit on lands_landzone.unit_id=lands_landunit.id
+
+join persons_person on lands_landown.person_id=persons_person.id
+join persons_individualperson on persons_person.id=persons_individualperson.person_ptr_id
+
+join address_city on persons_person.city_id=address_city.id
+join address_district on address_city.district_id=address_district.id
+join address_region on address_district.region_id=address_region.id
+
+order by persons_individualperson.last_name, persons_individualperson.first_name, persons_individualperson.middle_name""")
+            writer.writerow(['Прізвище',
+                             'Ім\'я',
+                             'По батькові',
+                             'ІНН',
+                             'Адрес, Вулиця',
+                             'Адрес, Населений пункт',
+                             'Адрес, Район',
+                             'Адрес, Область',
+                             'Коментар про особу',
+                             'Кадастровий номер',
+                             'Площа',
+                             'Призначення, Код',
+                             'Призначення, Назва',
+                             'Адрес, Вулиця',
+                             'С.р',
+                             'Село',
+                             'Коментар про ділянку',
+                             ])
+            for row in cursor.fetchall():
+                writer.writerow(row)
+
+        return response
